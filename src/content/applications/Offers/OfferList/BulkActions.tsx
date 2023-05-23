@@ -6,7 +6,6 @@ import {
   IconButton,
   Button,
   ListItemText,
-  ListItem,
   List, ListItemButton
 } from '@mui/material';
 import { styled } from '@mui/material/styles';

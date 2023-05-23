@@ -1,5 +1,4 @@
 import { Typography, Grid } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 
 function PageHeader() {
   const user = {

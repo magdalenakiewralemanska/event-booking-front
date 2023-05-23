@@ -9,7 +9,6 @@ import {
   InputAdornment,
   lighten,
   List,
-  ListItem,
   ListItemAvatar,
   TextField,
   Theme,
