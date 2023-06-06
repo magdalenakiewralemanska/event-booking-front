@@ -7,8 +7,13 @@ import {
   Typography,
   CardMedia
 } from '@mui/material';
+import { Offer } from 'src/models/Offer';
 
-function OfferDescription() {
+interface OfferDescriptionProps {
+  offer: Offer;
+}
+
+function OfferDescription({ offer }: OfferDescriptionProps) {
   return (
     <Grid item xs={12} mt={3}>
       <Card>
@@ -26,26 +31,13 @@ function OfferDescription() {
             <Card>
               <Box pl={2} pr={2}>
                 <Typography variant="h3" fontWeight="bold" sx={{ py: 2 }}>
-                  Your Best Birthday Party
+                  {offer.name}
                 </Typography>
                 <Typography variant="h4" fontWeight="bold">
-                  Why at Loopy's?{' '}
+                  Why {offer.organizer}?
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ py: 2 }}>
-                  An opportunity for crazy fun in the largest Family
-                  Entertainment Center in Poland. The price of each package
-                  includes a warm and nutritious snack for children. You can
-                  choose a menu from the available list of dishes that we
-                  prepare on site, just before the party. Time together in the
-                  birthday room during a snack and a ceremonial toast with a
-                  cake and candles. A gift from Loopy's for the birthday boy. 4
-                  birthday adventure themes to choose from. All of them are
-                  adapted to the age of the birthday boy and his guests. A
-                  simple way to book online - without leaving home, without
-                  complications and unnecessary formalities. You choose what you
-                  want and we organize it. A table for parents and adult guests
-                  in the restaurant where they can spend time talking and having
-                  fun with aromatic coffee and home-made pastries.
+                  {offer.description}
                 </Typography>
               </Box>
 
@@ -61,7 +53,7 @@ function OfferDescription() {
                     Maximal age:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    Phone number:
+                    Contact:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
                     Address:
@@ -69,19 +61,23 @@ function OfferDescription() {
                 </Box>
                 <Box pl={5} justifyContent={'right'}>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    Loopy's World
+                    {offer.organizer}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    3
+                    {offer.minAge}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    99
+                    {offer.maxAge}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    222-222-222
+                    {offer.contact}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    Vivaldiego 15/2, 50-555 Wrocław
+                    {offer.address.street} {offer.address.houseNumber}/
+                    {offer.address.apartmentNumber}
+                  </Typography>
+                  <Typography variant="h4" fontWeight="normal" sx={{ pb: 2 }}>
+                    {offer.address.zipCode} {offer.address.city}
                   </Typography>
                 </Box>
               </Grid>

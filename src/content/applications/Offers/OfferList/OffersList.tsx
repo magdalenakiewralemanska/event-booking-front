@@ -219,7 +219,7 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                       sx={{ margin: 1 }}
                       color="primary"
                       component={RouterLink}
-                      to="/events/offers/offerDetails"
+                      to={`/events/${eventId}/offers/${offer.id}`}
                     >
                       Offer details
                     </Button>

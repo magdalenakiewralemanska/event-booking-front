@@ -10,6 +10,8 @@ export interface Offer {
   minAge: number;
   maxAge: number;
   description: string;
+  organizer: string;
+  contact: string;
   address: Address;
   event: EventType;
   offerPackages: OfferPackage;
