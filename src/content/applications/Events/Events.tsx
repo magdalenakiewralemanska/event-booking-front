@@ -13,6 +13,12 @@ import {
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { NavLink as RouterLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { EventType } from '../../../models/EventType';
+import axios from 'axios';
+import { User } from 'src/models/User';
+import AddEventModal from './AddEventModal';
+import UpdateEventModal from './UpdateEventModal';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -76,6 +82,59 @@ const CardAddAction = styled(Card)(
 );
 
 function Events() {
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [user, setUser] = useState<User>();
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
+
+  const handleClickAdd = () => {
+    setOpenAddModal(true);
+  };
+
+  const handleCloseAdd = () => {
+    setOpenAddModal(false);
+  };
+
+  const handleClickUpdate = (event: EventType) => {
+    setSelectedEvent(event);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setSelectedEvent(null);
+    setOpenUpdateModal(false);
+  };
+
+  const handleDeleteEvent = (event) => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/events`, { data: event })
+      .then(() => {
+        setEvents((prevEvents) => prevEvents.filter((e) => e.id !== event.id));
+        console.log('Event deleted successfully');
+      })
+      .catch((error) => {
+        console.error('Error deleting event: ', error);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/events`
+      );
+      console.log(response.data);
+      setEvents(response.data);
+      console.log(events);
+    } catch (error) {
+      console.error('Error with fetching data from database', error);
+    }
+  };
+
   return (
     <>
       <Box
@@ -89,82 +148,69 @@ function Events() {
         <Typography variant="h2">Events</Typography>
       </Box>
       <Grid container spacing={3}>
-        <Grid xs={12} md={4} item>
-          <Card
-            sx={{
-              px: 1
-            }}
-          >
-            <CardContent>
-              <AvatarWrapper>
-                <img alt="Birthday event" src="/static/images/birthday.jpg" />
-              </AvatarWrapper>
-              <Box
-                sx={{
-                  pt: 3
-                }}
-              >
-                <Typography
-                  variant="h3"
-                  gutterBottom
-                  noWrap
-                  textAlign={'center'}
+        {events.map((event) => (
+          <Grid xs={12} md={4} item key={event.id}>
+            <Card
+              sx={{
+                px: 1
+              }}
+            >
+              <CardContent>
+                <AvatarWrapper>
+                  <img alt={event.name} src="/static/images/birthday.jpg" />
+                </AvatarWrapper>
+                <Box
+                  sx={{
+                    pt: 3
+                  }}
                 >
-                  Birthday party
-                </Typography>
-              </Box>
-              <Grid container spacing={3} p={4}>
-                <Grid sm item>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    component={RouterLink}
-                    to="/offers"
+                  <Typography
+                    variant="h3"
+                    gutterBottom
+                    noWrap
+                    textAlign={'center'}
                   >
-                    Show Offers
-                  </Button>
+                    {event.name}
+                  </Typography>
+                </Box>
+                <Grid container spacing={3} p={4}>
+                  <Grid sm item>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      component={RouterLink}
+                      to={`${event.id}/offers`}
+                    >
+                      Show Offers
+                    </Button>
+                  </Grid>
+                  <Grid sm item>
+                    <Box
+                      sx={{
+                        display: { xs: 'block', md: 'flex' },
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        onClick={() => handleClickUpdate(event)}
+                      >
+                        Update event
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleDeleteEvent(event)}
+                      >
+                        Delete event
+                      </Button>
+                    </Box>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid xs={12} md={4} item>
-          <Card
-            sx={{
-              px: 1
-            }}
-          >
-            <CardContent>
-              <AvatarWrapper>
-                <img
-                  alt="Employees party"
-                  src="/static/images/employees-party.jpg"
-                />
-              </AvatarWrapper>
-              <Box
-                sx={{
-                  pt: 3
-                }}
-              >
-                <Typography
-                  variant="h3"
-                  gutterBottom
-                  noWrap
-                  textAlign={'center'}
-                >
-                  Employees party
-                </Typography>
-              </Box>
-              <Grid container spacing={3} p={4}>
-                <Grid sm item>
-                  <Button fullWidth variant="outlined">
-                    Show Offers
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
         <Grid xs={12} md={4} item>
           <Tooltip arrow title="Click to add a new event">
             <CardAddAction>
@@ -175,7 +221,16 @@ function Events() {
               >
                 <CardContent>
                   <AvatarAddWrapper>
-                    <AddTwoToneIcon fontSize="large" />
+                    <AddTwoToneIcon fontSize="large" onClick={handleClickAdd} />
+                    <AddEventModal
+                      open={openAddModal}
+                      onClose={handleCloseAdd}
+                    />
+                    <UpdateEventModal
+                      open={openUpdateModal}
+                      onClose={handleCloseUpdate}
+                      selectedEvent={selectedEvent}
+                    />
                   </AvatarAddWrapper>
                 </CardContent>
               </CardActionArea>

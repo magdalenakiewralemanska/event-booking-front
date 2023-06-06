@@ -5,11 +5,11 @@ import Footer from 'src/components/Footer';
 import Events from './Events';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
-function DashboardCrypto() {
+function EventBooking() {
   return (
     <>
       <Helmet>
-        <title>Crypto Dashboard</title>
+        <title>Event booking</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />
@@ -32,4 +32,4 @@ function DashboardCrypto() {
   );
 }
 
-export default DashboardCrypto;
+export default EventBooking;

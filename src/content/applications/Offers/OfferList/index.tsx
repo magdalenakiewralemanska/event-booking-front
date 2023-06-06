@@ -3,9 +3,12 @@ import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import EventOffers from './RecentOrders';
+import { useParams } from 'react-router-dom';
+import OffersList from './OffersList';
 
-function Offers() {
+const Offers = () => {
+  const { eventId } = useParams();
+  const parsedEventId = parseInt(eventId);
   return (
     <>
       <Helmet>
@@ -21,13 +24,13 @@ function Offers() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <EventOffers />
+            <OffersList eventId={parsedEventId} offers={[]} />
           </Grid>
         </Grid>
       </Container>
       <Footer />
     </>
   );
-}
+};
 
 export default Offers;

@@ -1,15 +1,10 @@
-import { FC, ChangeEvent, useState } from 'react';
-import { format } from 'date-fns';
-import numeral from 'numeral';
+import { FC, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
   Divider,
   Box,
-  FormControl,
-  InputLabel,
   Card,
-  Checkbox,
   IconButton,
   Table,
   TableBody,
@@ -18,8 +13,6 @@ import {
   TablePagination,
   TableRow,
   TableContainer,
-  Select,
-  MenuItem,
   Typography,
   useTheme,
   CardHeader,
@@ -27,144 +20,57 @@ import {
   Button
 } from '@mui/material';
 
-import Label from 'src/components/Label';
-import {
-  Offers as Offers,
-  OfferStatus as OfferStatus
-} from 'src/models/Offers';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import { Offer as Offers } from 'src/models/Offer';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import BulkActions from './BulkActions';
 import { styled } from '@mui/material/styles';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import { NavLink as RouterLink } from 'react-router-dom';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 interface OfferListProps {
   className?: string;
   offers: Offers[];
+  eventId: number;
 }
-
-interface Filters {
-  status?: OfferStatus;
-}
-
-const getStatusLabel = (offerStatus: OfferStatus): JSX.Element => {
-  const map = {
-    failed: {
-      text: 'Cancelled',
-      color: 'error'
-    },
-    completed: {
-      text: 'Finished',
-      color: 'success'
-    },
-    pending: {
-      text: 'Current',
-      color: 'info'
-    }
-  };
-
-  const { text, color }: any = map[offerStatus];
-
-  return <Label color={color}>{text}</Label>;
-};
-
-const applyFilters = (offers: Offers[], filters: Filters): Offers[] => {
-  return offers.filter((offers) => {
-    let matches = true;
-
-    if (filters.status && offers.status !== filters.status) {
-      matches = false;
-    }
-
-    return matches;
-  });
-};
-
-const applyPagination = (
-  offers: Offers[],
-  page: number,
-  limit: number
-): Offers[] => {
-  return offers.slice(page * limit, page * limit + limit);
-};
 
 const OffersList: FC<OfferListProps> = ({ offers }) => {
-  const [selectedOffers, setSelectedOffers] = useState<string[]>([]);
-  const selectedBulkActions = selectedOffers.length > 0;
-  const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
+  const [eventOffers, setEventOffers] = useState<Offers[]>([]);
+  const { eventId } = useParams();
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(5);
 
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: 'finished',
-      name: 'Finished'
-    },
-    {
-      id: 'current',
-      name: 'Current'
-    },
-    {
-      id: 'cancelled',
-      name: 'Cancelled'
-    }
-  ];
+  useEffect(() => {
+    const fetchEventOffers = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/events/${eventId}/offers`
+        );
+        const data = response.data;
+        console.log(response.data);
+        setEventOffers(data);
+      } catch (error) {
+        console.error('Error fetching event offers:', error);
+      }
+    };
 
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
+    fetchEventOffers();
+  }, [eventId]);
 
-    if (e.target.value !== 'all') {
-      value = e.target.value;
-    }
+  const theme = useTheme();
 
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: value
-    }));
-  };
-
-  const handleSelectAllOffers = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSelectedOffers(
-      event.target.checked ? offers.map((offers) => offers.id) : []
-    );
-  };
-
-  const handleSelectOneOffer = (
-    event: ChangeEvent<HTMLInputElement>,
-    offerId: string
-  ): void => {
-    if (!selectedOffers.includes(offerId)) {
-      setSelectedOffers((prevSelected) => [...prevSelected, offerId]);
-    } else {
-      setSelectedOffers((prevSelected) =>
-        prevSelected.filter((id) => id !== offerId)
-      );
-    }
-  };
-
-  const handlePageChange = (event: any, newPage: number): void => {
+  const handlePageChange = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+  const handleLimitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
-  const filteredOffers = applyFilters(offers, filters);
-  const paginatedOffers = applyPagination(filteredOffers, page, limit);
-  const selectedSomeOffers =
-    selectedOffers.length > 0 && selectedOffers.length < offers.length;
-  const selectedAllOffers = selectedOffers.length === offers.length;
-  const theme = useTheme();
+  const indexOfLastItem = (page + 1) * limit;
+  const indexOfFirstItem = indexOfLastItem - limit;
+  const currentItems = eventOffers.slice(indexOfFirstItem, indexOfLastItem);
 
   const ImageWrapper = styled(Card)(
     ({ theme }) => `
@@ -207,73 +113,25 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
 
   return (
     <Card>
-      {selectedBulkActions && (
-        <Box flex={1} p={2}>
-          <BulkActions />
-        </Box>
-      )}
-      {!selectedBulkActions && (
-        <CardHeader
-          action={
-            <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={filters.status || 'all'}
-                  onChange={handleStatusChange}
-                  label="Status"
-                  autoWidth
-                >
-                  {statusOptions.map((statusOption) => (
-                    <MenuItem key={statusOption.id} value={statusOption.id}>
-                      {statusOption.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          }
-          title="Current offers"
-        />
-      )}
       <Divider />
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  color="primary"
-                  checked={selectedAllOffers}
-                  indeterminate={selectedSomeOffers}
-                  onChange={handleSelectAllOffers}
-                />
-              </TableCell>
               <TableCell />
               <TableCell>Title</TableCell>
-              <TableCell>Organizer</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Min age</TableCell>
-              <TableCell align="center">Status</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Minimal age</TableCell>
+              <TableCell>Maximal age</TableCell>
+              <TableCell>Address</TableCell>
               <TableCell align="right" />
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedOffers.map((offer) => {
-              const isCryptoOrderSelected = selectedOffers.includes(offer.id);
+            {currentItems.map((offer) => {
               return (
-                <TableRow hover key={offer.id} selected={isCryptoOrderSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      checked={isCryptoOrderSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneOffer(event, offer.id)
-                      }
-                      value={isCryptoOrderSelected}
-                    />
-                  </TableCell>
+                <TableRow hover key={offer.id}>
                   <TableCell>
                     <ImageWrapper>
                       <Avatar
@@ -304,10 +162,19 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                       gutterBottom
                       noWrap
                     >
-                      {offer.orderDetails}
+                      {offer.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(offer.orderDate, 'dd MMMM yyyy')}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      maxWidth={400}
+                      gutterBottom
+                      noWrap
+                    >
+                      {offer.description}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -318,7 +185,7 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                       gutterBottom
                       noWrap
                     >
-                      {offer.orderID}
+                      {offer.minAge}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -329,10 +196,7 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                       gutterBottom
                       noWrap
                     >
-                      {offer.sourceName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {offer.sourceDesc}
+                      {offer.maxAge}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -343,15 +207,12 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                       gutterBottom
                       noWrap
                     >
-                      {offer.amountCrypto}
-                      {offer.cryptoCurrency}
+                      {offer.address.street} {offer.address.houseNumber}/
+                      {offer.address.apartmentNumber}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {numeral(offer.amount).format(`${offer.currency}0,0.00`)}
+                      {offer.address.zipCode} {offer.address.city}
                     </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    {getStatusLabel(offer.status)}
                   </TableCell>
                   <TableCell align="center">
                     <Button
@@ -359,26 +220,12 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                       sx={{ margin: 1 }}
                       color="primary"
                       component={RouterLink}
-                      to="/offers/offerDetails"
+                      to="/events/offers/offerDetails"
                     >
                       Offer details
                     </Button>
                   </TableCell>
                   <TableCell align="right">
-                    <Tooltip title="Edit Offer" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
                     <Tooltip title="Delete Offer" arrow>
                       <IconButton
                         sx={{
@@ -386,9 +233,9 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                           color: theme.palette.error.main
                         }}
                         color="inherit"
-                        size="small"
+                        size="large"
                       >
-                        <DeleteTwoToneIcon fontSize="small" />
+                        <DeleteTwoToneIcon fontSize="large" />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -401,7 +248,7 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredOffers.length}
+          count={eventOffers.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

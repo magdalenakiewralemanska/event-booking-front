@@ -69,16 +69,25 @@ const routes: RouteObject[] = [
     ]
   },
   {
-    path: 'offers',
+    path: 'events',
     element: <SidebarLayout />,
     children: [
       {
         path: '',
-        element: <Offers />
+        element: <Events />
       },
       {
-        path: 'offerDetails',
-        element: <OfferDetails />
+        path: ':eventId/offers',
+        children: [
+          {
+            path: '',
+            element: <Offers />
+          },
+          {
+            path: 'offers/offerDetails',
+            element: <OfferDetails />
+          }
+        ]
       }
     ]
   },
