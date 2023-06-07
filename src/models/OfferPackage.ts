@@ -1,7 +1,7 @@
 import { Offer } from "./Offer";
 
 export interface OfferPackage {
-    id: number;
+    id?: number;
     title: string;
     description: string;
     price: number;
@@ -10,6 +10,6 @@ export interface OfferPackage {
     isOwnFoodAvailable: boolean;
     isOwnDrinkAvailable: boolean;
     specials: string;
-    otherDetails: string;
+    otherDetails: string,
     offer: Offer;
 }

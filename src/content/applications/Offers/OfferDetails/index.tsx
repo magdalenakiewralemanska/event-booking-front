@@ -11,15 +11,22 @@ import axios from 'axios';
 function OfferDetails() {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const { eventId, offerId } = useParams();
+  const [offerPackages, setOfferPackages] = useState([]);
 
   useEffect(() => {
     const fetchOfferDetails = async () => {
       try {
-        const response = await axios.get(
+        const offerResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/events/${eventId}/offers/${offerId}`
         );
-        const data = response.data;
-        setSelectedOffer(data);
+        const offerData = offerResponse.data;
+        setSelectedOffer(offerData);
+
+        const offerPackageResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/offers/${offerId}/packages`
+        );
+        const offerPackagesData = offerPackageResponse.data;
+        setOfferPackages(offerPackagesData);
       } catch (error) {
         console.error('Error fetching offer details:', error);
       }
@@ -48,7 +55,7 @@ function OfferDetails() {
             <WeekSchedule />
           </Grid>
           <Grid item xs={12} md={12}>
-            <Packages />
+            <Packages offerPackages={offerPackages} />
           </Grid>
           <Grid item xs={12} md={12}></Grid>
         </Grid>
