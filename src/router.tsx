@@ -6,7 +6,6 @@ import SidebarLayout from 'src/layouts/SidebarLayout';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import PackageDetails from './content/applications/Packages/PackageDetails';
 import Package from './content/applications/Packages/Package';
 
 const Loader = (Component) => (props) =>
