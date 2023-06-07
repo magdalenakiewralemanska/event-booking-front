@@ -16,7 +16,8 @@ import {
   Typography,
   useTheme,
   Avatar,
-  Button
+  Button,
+  CardHeader
 } from '@mui/material';
 
 import { Offer as Offers } from 'src/models/Offer';
@@ -67,6 +68,17 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
     setPage(0);
   };
 
+  const handleDeleteOffer = async (offerId: number) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/events/${eventId}/offers/${offerId}`
+      );
+      setEventOffers(eventOffers.filter((offer) => offer.id !== offerId));
+    } catch (error) {
+      console.error('Error in deleteing offer: ', error);
+    }
+  };
+
   const indexOfLastItem = (page + 1) * limit;
   const indexOfFirstItem = indexOfLastItem - limit;
   const currentItems = eventOffers.slice(indexOfFirstItem, indexOfLastItem);
@@ -112,6 +124,14 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
 
   return (
     <Card>
+      <CardHeader
+        title="Current offers"
+        action={
+          <Box>
+            <Button variant="contained">Add new offer</Button>
+          </Box>
+        }
+      />
       <Divider />
       <TableContainer>
         <Table>
@@ -233,6 +253,7 @@ const OffersList: FC<OfferListProps> = ({ offers }) => {
                         }}
                         color="inherit"
                         size="large"
+                        onClick={() => handleDeleteOffer(offer.id)}
                       >
                         <DeleteTwoToneIcon fontSize="large" />
                       </IconButton>
