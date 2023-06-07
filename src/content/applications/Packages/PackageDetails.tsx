@@ -8,10 +8,37 @@ import {
   Typography,
   CardMedia
 } from '@mui/material';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { OfferPackage } from 'src/models/OfferPackage';
 
-function PackageDetails() {
+function PackageDetails({ packageId }) {
+  const [packageDetails, setPackageDetails] = useState<OfferPackage | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchPackageDetails = async () => {
+      try {
+        const response = await axios.get<OfferPackage>(
+          `${process.env.REACT_APP_API_URL}/packageDetails/${packageId}`
+        );
+        const packageData = response.data;
+        setPackageDetails(packageData);
+      } catch (error) {
+        console.error('Error fetching package details:', error);
+      }
+    };
+
+    fetchPackageDetails();
+  }, [packageId]);
+
+  if (!packageDetails) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <Grid item xs={12} mt={3}>
+    <Grid item xs={12} mt={3} p={3}>
       <Card>
         <CardHeader title="Package details" />
         <Divider />
@@ -27,18 +54,13 @@ function PackageDetails() {
             <Card>
               <Box pl={2} pr={2}>
                 <Typography variant="h3" fontWeight="bold" sx={{ py: 2 }}>
-                  Secret Garden
+                  {packageDetails.title}
                 </Typography>
                 <Typography variant="h4" fontWeight="bold">
                   Description:
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ py: 2 }}>
-                  Behind the seven mountains, behind the seven forests in the
-                  kingdom of Loopy's World lived a gardener. He decided to
-                  create a garden where everyone could feel good. Unfortunately,
-                  the evil elf decided to close the entrance to the garden and
-                  hide the key. Try to find the lost key together and enter the
-                  garden so that joy and fun reign again!
+                  {packageDetails.description}
                 </Typography>
               </Box>
 
@@ -65,22 +87,22 @@ function PackageDetails() {
                 </Box>
                 <Box pl={5} justifyContent={'right'}>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    150 $
+                    {packageDetails.price}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    3 hours
+                    {packageDetails.duration}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    10
+                    {packageDetails.maxAmountOfPeople}
                   </Typography>
                   <Box>
-                    <Check></Check> <Clear></Clear>
+                    {packageDetails.isOwnFoodAvailable ? <Check /> : <Clear />}
                   </Box>
                   <Box sx={{ py: 1 }}>
-                    <Check></Check> <Clear></Clear>
+                    {packageDetails.isOwnDrinkAvailable ? <Check /> : <Clear />}
                   </Box>
                   <Typography variant="h4" fontWeight="normal">
-                    Birthday entertainer
+                    {packageDetails.specials}
                   </Typography>
                 </Box>
               </Grid>
@@ -89,10 +111,7 @@ function PackageDetails() {
                   Other details:
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ py: 2 }}>
-                  booking one of the 4 birthday rooms, a warm snack and a drink
-                  for each guest (chosen from the birthday menu), booking a
-                  table in the Loopy's restaurant for the parents/keepers, gift
-                  for the birthday boy/girl
+                  {packageDetails.otherDetails}
                 </Typography>
               </Box>
             </Card>

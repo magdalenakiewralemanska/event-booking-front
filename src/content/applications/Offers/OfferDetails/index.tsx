@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Container, Grid } from '@mui/material';
 import Footer from 'src/components/Footer';
-import Packages from './OfferPackages';
+import Packages from './Packages';
 import WeekSchedule from './WeekSchedule';
 import OfferDescription from './OfferDescription';
 import React, { useState, useEffect } from 'react';
@@ -23,7 +23,7 @@ function OfferDetails() {
         setSelectedOffer(offerData);
 
         const offerPackageResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/offers/${offerId}/packages`
+          `${process.env.REACT_APP_API_URL}/offers/${offerId}`
         );
         const offerPackagesData = offerPackageResponse.data;
         setOfferPackages(offerPackagesData);

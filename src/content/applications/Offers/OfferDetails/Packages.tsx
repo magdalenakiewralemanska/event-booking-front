@@ -8,7 +8,7 @@ import {
   Grid,
   CardContent,
   CardMedia,
-  Checkbox,
+  Checkbox
 } from '@mui/material';
 import { useState } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
@@ -80,7 +80,7 @@ function Packages({ offerPackages }) {
                             fullWidth
                             variant="outlined"
                             component={RouterLink}
-                            to="/packageDetails"
+                            to={`/packageDetails/${offerPackage.id}`}
                           >
                             Show package details
                           </Button>

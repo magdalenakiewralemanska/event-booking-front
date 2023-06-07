@@ -2,8 +2,11 @@ import { Helmet } from 'react-helmet-async';
 import { Container, Grid } from '@mui/material';
 import Footer from 'src/components/Footer';
 import PackageDetails from './PackageDetails';
+import { useParams } from 'react-router-dom';
 
-function Tooltips() {
+function Package() {
+  const { packageId } = useParams();
+
   return (
     <>
       <Helmet>
@@ -18,7 +21,7 @@ function Tooltips() {
           spacing={3}
         >
           <Grid item xs={12} md={12}>
-            <PackageDetails />
+            <PackageDetails packageId={packageId} />
           </Grid>
           <Grid item xs={12} md={12}></Grid>
         </Grid>
@@ -28,4 +31,4 @@ function Tooltips() {
   );
 }
 
-export default Tooltips;
+export default Package;
