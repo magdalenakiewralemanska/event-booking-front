@@ -1,4 +1,3 @@
-import { Offer } from "./Offer";
 
 export interface OfferPackage {
     id?: number;

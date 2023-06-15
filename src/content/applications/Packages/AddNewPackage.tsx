@@ -36,7 +36,6 @@ const AddNewPackage = () => {
     offerId: parsedOfferId
   });
 
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
 
   function handleChange(
