@@ -5,19 +5,36 @@ import {
   Grid,
   Box,
   Typography,
-  CardMedia
+  CardMedia,
+  Button
 } from '@mui/material';
 import { Offer } from 'src/models/Offer';
+import { NavLink as RouterLink } from 'react-router-dom';
 
 interface OfferDescriptionProps {
   offer: Offer;
+  eventId: string;
 }
 
-function OfferDescription({ offer }: OfferDescriptionProps) {
+function OfferDescription(props: OfferDescriptionProps) {
+  const { eventId, offer } = props;
   return (
     <Grid item xs={12} mt={3}>
       <Card>
-        <CardHeader title="Offer details" />
+        <CardHeader
+          title="Offer details"
+          action={
+            <Box>
+              <Button
+                variant="contained"
+                component={RouterLink}
+                to={`/${eventId}/${offer.id}/package`}
+              >
+                Add new package for offer
+              </Button>
+            </Box>
+          }
+        />
         <Divider />
         <Grid
           container

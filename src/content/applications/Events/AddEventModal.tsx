@@ -44,10 +44,15 @@ const AvatarWrapper = styled(Avatar)(
   `
 );
 
-function AddEventModal(props) {
-  const { onClose, open } = props;
+interface AddEventModalProps {
+  onClose: (eventName: string) => void;
+  open: boolean;
+  fetchData: () => void;
+}
+
+function AddEventModal(props: AddEventModalProps) {
+  const { onClose, open, fetchData } = props;
   const [eventName, setEventName] = useState('');
-  const [events, setEvents] = useState<EventType[]>([]);
   const [error, setError] = useState<string>('');
 
   const handleClose = () => {
@@ -68,9 +73,9 @@ function AddEventModal(props) {
     }
     axios
       .post<EventType>(`${process.env.REACT_APP_API_URL}/events`, newEvent)
-      .then((response) => {
+      .then(() => {
         console.log('Event added successfully');
-        setEvents((prevEvents) => [...prevEvents, response.data]);
+        fetchData();
         handleClose();
       })
       .catch((error) => {

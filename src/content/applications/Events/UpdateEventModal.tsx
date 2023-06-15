@@ -44,8 +44,15 @@ const AvatarWrapper = styled(Avatar)(
     `
 );
 
-function UpdateEventModal(props) {
-  const { onClose, open, selectedEvent } = props;
+interface UpdateEventModalProps {
+  onClose: (eventName: string) => void;
+  open: boolean;
+  selectedEvent: EventType;
+  fetchData: () => void;
+}
+
+function UpdateEventModal(props: UpdateEventModalProps) {
+  const { onClose, open, selectedEvent, fetchData } = props;
   const [eventName, setEventName] = useState('');
   const [events, setEvents] = useState<EventType[]>([]);
   const [error, setError] = useState<string>('');
@@ -81,6 +88,7 @@ function UpdateEventModal(props) {
           eventType.id === response.data.id ? response.data : eventType
         );
         setEvents(updatedEvents);
+        fetchData();
         handleClose();
       })
       .catch((error) => {

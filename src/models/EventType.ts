@@ -1,6 +1,6 @@
 
 export interface EventType {
-    id: number;
+    id?: number;
     name: string;
     
 }

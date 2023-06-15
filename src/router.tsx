@@ -35,6 +35,10 @@ const Login = Loader(
   lazy(() => import('src/content/applications/Users/Login'))
 );
 
+const AddNewPackage = Loader(
+  lazy(() => import('src/content/applications/Packages/AddNewPackage'))
+);
+
 const Registration = Loader(
   lazy(
     () => import('src/content/applications/Users/registration/RegistrationForm')
@@ -98,6 +102,19 @@ const routes: RouteObject[] = [
       {
         path: 'packageDetails/:packageId',
         element: <Package />
+      },
+      {
+        path: ':eventId/:offerId/package',
+        children: [
+          {
+            path: '',
+            element: <AddNewPackage />
+          },
+          {
+            path: ':packageId',
+            element: <Offers />
+          }
+        ]
       }
     ]
   },

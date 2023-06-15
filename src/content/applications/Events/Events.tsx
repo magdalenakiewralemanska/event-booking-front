@@ -30,7 +30,7 @@ const AvatarWrapper = styled(Avatar)(
     padding: ${theme.spacing(0.5)};
     border-radius: 60px;
     height: ${theme.spacing(26)};
-    width: ${theme.spacing(38.5)};
+    width: 100%;
     background: ${
       theme.palette.mode === 'dark'
         ? theme.colors.alpha.trueWhite[30]
@@ -43,7 +43,7 @@ const AvatarWrapper = styled(Avatar)(
       display: block;
       border-radius: inherit;
       height: ${theme.spacing(25)};
-      width: ${theme.spacing(37.5)};
+      width: 100%;
     }
 `
 );
@@ -225,11 +225,13 @@ function Events() {
                     <AddEventModal
                       open={openAddModal}
                       onClose={handleCloseAdd}
+                      fetchData={fetchData}
                     />
                     <UpdateEventModal
                       open={openUpdateModal}
                       onClose={handleCloseUpdate}
                       selectedEvent={selectedEvent}
+                      fetchData={fetchData}
                     />
                   </AvatarAddWrapper>
                 </CardContent>

@@ -34,7 +34,7 @@ interface OfferListProps {
   eventId: number;
 }
 
-const OffersList: FC<OfferListProps> = ({ offers }) => {
+const OffersList: FC<OfferListProps> = () => {
   const [eventOffers, setEventOffers] = useState<Offers[]>([]);
   const { eventId } = useParams();
   const [page, setPage] = useState(0);

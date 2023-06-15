@@ -11,5 +11,5 @@ export interface OfferPackage {
     isOwnDrinkAvailable: boolean;
     specials: string;
     otherDetails: string,
-    offer: Offer;
+    offerId: number;
 }

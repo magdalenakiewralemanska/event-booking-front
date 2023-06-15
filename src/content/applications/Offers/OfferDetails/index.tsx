@@ -49,7 +49,9 @@ function OfferDetails() {
           spacing={3}
         >
           <Grid item xs={12} md={12}>
-            {selectedOffer && <OfferDescription offer={selectedOffer} />}
+            {selectedOffer && (
+              <OfferDescription offer={selectedOffer} eventId={eventId} />
+            )}
           </Grid>
           <Grid item xs={12} md={12}>
             <WeekSchedule />
