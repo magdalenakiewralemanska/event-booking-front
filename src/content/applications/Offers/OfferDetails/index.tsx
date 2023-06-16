@@ -7,11 +7,13 @@ import OfferDescription from './OfferDescription';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { OfferPackage } from 'src/models/OfferPackage';
+import { Offer } from 'src/models/Offer';
 
 function OfferDetails() {
-  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState<Offer>(null);
   const { eventId, offerId } = useParams();
-  const [offerPackages, setOfferPackages] = useState([]);
+  const [offerPackages, setOfferPackages] = useState<OfferPackage[]>([]);
 
   useEffect(() => {
     const fetchOfferDetails = async () => {
@@ -57,7 +59,11 @@ function OfferDetails() {
             <WeekSchedule />
           </Grid>
           <Grid item xs={12} md={12}>
-            <Packages offerPackages={offerPackages} />
+            <Packages
+              offerPackages={offerPackages}
+              eventId={eventId}
+              offerId={offerId}
+            />
           </Grid>
           <Grid item xs={12} md={12}></Grid>
         </Grid>

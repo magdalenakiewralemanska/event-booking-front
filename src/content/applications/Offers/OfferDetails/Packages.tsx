@@ -11,11 +11,19 @@ import {
   Checkbox
 } from '@mui/material';
 import { useState } from 'react';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
 import { OfferPackage } from 'src/models/OfferPackage';
 
-function Packages({ offerPackages }) {
+interface PackagesProps {
+  offerId: string;
+  eventId: string;
+  offerPackages: OfferPackage[];
+}
+
+function Packages(props: PackagesProps) {
+  const { eventId, offerId, offerPackages } = props;
   const [selectedPackageId, setSelectedPackageId] = useState(null);
+  const navigate = useNavigate();
 
   const handlePackageSelection = (packageId: number) => {
     setSelectedPackageId((prevSelectedPackageId: number) =>
@@ -84,6 +92,31 @@ function Packages({ offerPackages }) {
                           >
                             Show package details
                           </Button>
+                        </Grid>
+                      </Grid>
+                      <Grid container>
+                        <Grid
+                          sm
+                          item
+                          display={'flex'}
+                          gap={3}
+                          justifyContent={'center'}
+                        >
+                          <Box>
+                            <Button
+                              variant="contained"
+                              onClick={() =>
+                                navigate(
+                                  `/${eventId}/${offerId}/package/${offerPackage.id}`
+                                )
+                              }
+                            >
+                              Update package
+                            </Button>
+                          </Box>
+                          <Box>
+                            <Button variant="outlined">Delete package</Button>
+                          </Box>
                         </Grid>
                       </Grid>
                     </CardContent>

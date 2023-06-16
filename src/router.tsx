@@ -7,6 +7,7 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import Package from './content/applications/Packages/Package';
+import UpdatePackage from './content/applications/Packages/UpdatePackage';
 
 const Loader = (Component) => (props) =>
   (
@@ -104,7 +105,7 @@ const routes: RouteObject[] = [
         element: <Package />
       },
       {
-        path: ':eventId/:offerId/package',
+        path: ':eventId/:offerId/package/',
         children: [
           {
             path: '',
@@ -112,7 +113,7 @@ const routes: RouteObject[] = [
           },
           {
             path: ':packageId',
-            element: <Offers />
+            element: <UpdatePackage />
           }
         ]
       }
