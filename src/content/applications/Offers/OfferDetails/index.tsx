@@ -15,25 +15,25 @@ function OfferDetails() {
   const { eventId, offerId } = useParams();
   const [offerPackages, setOfferPackages] = useState<OfferPackage[]>([]);
 
+  const fetchOfferDetails = async () => {
+    try {
+      const offerResponse = await axios.get(
+        `${process.env.REACT_APP_API_URL}/events/${eventId}/offers/${offerId}`
+      );
+      const offerData = offerResponse.data;
+      setSelectedOffer(offerData);
+
+      const offerPackageResponse = await axios.get(
+        `${process.env.REACT_APP_API_URL}/offers/${offerId}`
+      );
+      const offerPackagesData = offerPackageResponse.data;
+      setOfferPackages(offerPackagesData);
+    } catch (error) {
+      console.error('Error fetching offer details:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchOfferDetails = async () => {
-      try {
-        const offerResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/events/${eventId}/offers/${offerId}`
-        );
-        const offerData = offerResponse.data;
-        setSelectedOffer(offerData);
-
-        const offerPackageResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/offers/${offerId}`
-        );
-        const offerPackagesData = offerPackageResponse.data;
-        setOfferPackages(offerPackagesData);
-      } catch (error) {
-        console.error('Error fetching offer details:', error);
-      }
-    };
-
     fetchOfferDetails();
   }, [eventId, offerId]);
 
@@ -63,6 +63,7 @@ function OfferDetails() {
               offerPackages={offerPackages}
               eventId={eventId}
               offerId={offerId}
+              fetchPackages={fetchOfferDetails}
             />
           </Grid>
           <Grid item xs={12} md={12}></Grid>

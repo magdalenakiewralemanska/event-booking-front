@@ -10,6 +10,7 @@ import {
   CardMedia,
   Checkbox
 } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
 import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
 import { OfferPackage } from 'src/models/OfferPackage';
@@ -18,10 +19,11 @@ interface PackagesProps {
   offerId: string;
   eventId: string;
   offerPackages: OfferPackage[];
+  fetchPackages: () => void;
 }
 
 function Packages(props: PackagesProps) {
-  const { eventId, offerId, offerPackages } = props;
+  const { eventId, offerId, offerPackages, fetchPackages } = props;
   const [selectedPackageId, setSelectedPackageId] = useState(null);
   const navigate = useNavigate();
 
@@ -29,6 +31,17 @@ function Packages(props: PackagesProps) {
     setSelectedPackageId((prevSelectedPackageId: number) =>
       prevSelectedPackageId === packageId ? null : packageId
     );
+  };
+
+  const handlePackageDelete = async (packageId: number) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/package/${packageId}`
+      );
+      fetchPackages();
+    } catch (error) {
+      console.error('Error deleting package:', error);
+    }
   };
 
   console.log(offerPackages);
@@ -115,7 +128,14 @@ function Packages(props: PackagesProps) {
                             </Button>
                           </Box>
                           <Box>
-                            <Button variant="outlined">Delete package</Button>
+                            <Button
+                              variant="outlined"
+                              onClick={() =>
+                                handlePackageDelete(offerPackage.id)
+                              }
+                            >
+                              Delete package
+                            </Button>
                           </Box>
                         </Grid>
                       </Grid>
