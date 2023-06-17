@@ -70,7 +70,10 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Maximal age:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    Contact:
+                    Contact email:
+                  </Typography>
+                  <Typography variant="h4" fontWeight="normal">
+                    Contact phone:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
                     Address:
@@ -87,7 +90,10 @@ function OfferDescription(props: OfferDescriptionProps) {
                     {offer.maxAge}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    {offer.contact}
+                    {offer.contactEmail}
+                  </Typography>
+                  <Typography variant="h4" fontWeight="normal">
+                    {offer.contactPhone}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
                     {offer.address.street} {offer.address.houseNumber}/

@@ -128,7 +128,13 @@ const OffersList: FC<OfferListProps> = () => {
         title="Current offers"
         action={
           <Box>
-            <Button variant="contained">Add new offer</Button>
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to={`/events/${eventId}/offers/addOffer`}
+            >
+              Add new offer
+            </Button>
           </Box>
         }
       />
