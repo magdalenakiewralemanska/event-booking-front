@@ -6,18 +6,19 @@ import { Grid, Container, Typography, Box } from '@mui/material';
 import ProfileCover from './ProfileCover';
 import Addresses from './Addresses';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
+import { useEffect, useState, useContext } from 'react';
+import { User } from 'src/models/User';
+import { UserContext } from 'src/contexts/UserContext';
 
 function ManagementUserProfile() {
-  const user = {
-    savedCards: 7,
-    username: 'Magdalena Kiewra-Lemańska',
-    coverImg: '/static/images/user-background.jpg',
-    avatar: '/static/images/user.jpg',
-    firstName: 'Magdalena',
-    lastName: 'Kiewra-Lemańska',
-    email: 'magdalenazur86@gmail.com',
-    phoneNumber: '111-111-111'
-  };
+  const { currentUser } = useContext(UserContext);
+  const [user, setUser] = useState<User>(currentUser);
+
+  useEffect(() => {
+    if (currentUser) {
+      setUser(currentUser);
+    }
+  }, [currentUser]);
 
   return (
     <>
@@ -28,7 +29,7 @@ function ManagementUserProfile() {
         <Box display="flex" mb={3}>
           <Box>
             <Typography variant="h3" component="h3" gutterBottom>
-              Profile for {user.username}
+              Profile for {currentUser.username}
             </Typography>
           </Box>
         </Box>

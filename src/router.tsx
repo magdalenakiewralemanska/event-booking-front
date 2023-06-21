@@ -8,6 +8,8 @@ import BaseLayout from 'src/layouts/BaseLayout';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import Package from './content/applications/Packages/Package';
 import UpdatePackage from './content/applications/Packages/UpdatePackage';
+import { UnauthorizedRoute } from './UnauthorizedRoute';
+import { ProtectedRoute } from './ProtectedRoute';
 
 const Loader = (Component) => (props) =>
   (
@@ -42,6 +44,10 @@ const AddNewPackage = Loader(
 
 const AddNewOffer = Loader(
   lazy(() => import('src/content/applications/Offers/OfferList/AddNewOffer'))
+);
+
+const UpdateOffer = Loader(
+  lazy(() => import('src/content/applications/Offers/OfferList/UpdateOffer'))
 );
 
 const Registration = Loader(
@@ -83,7 +89,11 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '',
-        element: <Events />
+        element: (
+          <UnauthorizedRoute>
+            <Events />
+          </UnauthorizedRoute>
+        )
       },
       {
         path: ':eventId/offers',
@@ -93,8 +103,20 @@ const routes: RouteObject[] = [
             element: <Offers />
           },
           {
+            path: 'updateOffer/:offerId',
+            element: (
+              <ProtectedRoute>
+                <UpdateOffer />
+              </ProtectedRoute>
+            )
+          },
+          {
             path: 'addOffer',
-            element: <AddNewOffer />
+            element: (
+              <ProtectedRoute>
+                <AddNewOffer />{' '}
+              </ProtectedRoute>
+            )
           },
           {
             path: ':offerId',
@@ -117,11 +139,19 @@ const routes: RouteObject[] = [
         children: [
           {
             path: '',
-            element: <AddNewPackage />
+            element: (
+              <ProtectedRoute>
+                <AddNewPackage />
+              </ProtectedRoute>
+            )
           },
           {
             path: ':packageId',
-            element: <UpdatePackage />
+            element: (
+              <ProtectedRoute>
+                <UpdatePackage />
+              </ProtectedRoute>
+            )
           }
         ]
       }
@@ -133,11 +163,19 @@ const routes: RouteObject[] = [
     children: [
       {
         path: 'details',
-        element: <UserProfile />
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'settings',
-        element: <UserSettings />
+        element: (
+          <ProtectedRoute>
+            <UserSettings />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'registration',

@@ -22,9 +22,10 @@ import {
 
 import { Offer as Offers } from 'src/models/Offer';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { styled } from '@mui/material/styles';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
@@ -39,6 +40,7 @@ const OffersList: FC<OfferListProps> = () => {
   const { eventId } = useParams();
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(5);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEventOffers = async () => {
@@ -251,6 +253,27 @@ const OffersList: FC<OfferListProps> = () => {
                     </Button>
                   </TableCell>
                   <TableCell align="right">
+                    <Tooltip title="Edit Offer" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': {
+                            background: theme.colors.primary.lighter
+                          },
+                          color: theme.palette.primary.main
+                        }}
+                        color="inherit"
+                        size="large"
+                        onClick={() =>
+                          navigate(
+                            `/events/${eventId}/offers/updateOffer/${offer.id}`
+                          )
+                        }
+                      >
+                        <EditTwoToneIcon fontSize="large" />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
                     <Tooltip title="Delete Offer" arrow>
                       <IconButton
                         sx={{

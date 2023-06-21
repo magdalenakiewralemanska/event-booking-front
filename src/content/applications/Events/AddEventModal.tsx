@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { SetStateAction, useState } from 'react';
-import PropTypes from 'prop-types';
 import { EventType } from 'react-hook-form';
 
 const AvatarWrapper = styled(Avatar)(
@@ -140,8 +139,4 @@ function AddEventModal(props: AddEventModalProps) {
   );
 }
 
-AddEventModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
-};
 export default AddEventModal;

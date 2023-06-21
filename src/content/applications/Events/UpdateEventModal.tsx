@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { SetStateAction, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { EventType } from 'src/models/EventType';
 
 const AvatarWrapper = styled(Avatar)(
@@ -153,13 +152,4 @@ function UpdateEventModal(props: UpdateEventModalProps) {
   );
 }
 
-UpdateEventModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  selectedEvent: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    offers: PropTypes.array.isRequired
-  })
-};
 export default UpdateEventModal;
