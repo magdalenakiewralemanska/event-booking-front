@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {
   Box,
   Typography,
@@ -14,6 +13,7 @@ import {
 import { styled } from '@mui/material/styles';
 
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
+import { User } from 'src/models/User';
 
 const Input = styled('input')({
   display: 'none'
@@ -77,11 +77,17 @@ const CardCoverAction = styled(Box)(
 `
 );
 
-const ProfileCover = ({ user }) => {
+interface ProfileProps {
+  user: User;
+}
+
+const ProfileCover = (props: ProfileProps) => {
+  const { user } = props;
+
   return (
     <>
       <CardCover>
-        <CardMedia image={user.coverImg} />
+        <CardMedia image={'/static/images/user-background.jpg'} />
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
@@ -96,7 +102,7 @@ const ProfileCover = ({ user }) => {
         </CardCoverAction>
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.username} src={user.avatar} />
+        <Avatar variant="rounded" alt={user.username} />
         <ButtonUploadWrapper>
           <Input
             accept="image/*"
@@ -198,11 +204,6 @@ const ProfileCover = ({ user }) => {
       </Grid>
     </>
   );
-};
-
-ProfileCover.propTypes = {
-  // @ts-ignore
-  user: PropTypes.object.isRequired
 };
 
 export default ProfileCover;

@@ -6,7 +6,6 @@ import { styled } from '@mui/material/styles';
 
 import EditProfileTab from './EditProfileTab';
 import ChangePasswordTab from './ChangePasswordTab';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 const TabsWrapper = styled(Tabs)(
   () => `
@@ -33,7 +32,7 @@ function ManagementUserSettings() {
       <Helmet>
         <title>User Settings - Applications</title>
       </Helmet>
-      <PageTitleWrapper />
+
       <Container maxWidth="lg">
         <Grid
           container
@@ -42,7 +41,7 @@ function ManagementUserSettings() {
           alignItems="stretch"
           spacing={3}
         >
-          <Grid item xs={12}>
+          <Grid item xs={12} mt={6}>
             <TabsWrapper
               onChange={handleTabsChange}
               value={currentTab}

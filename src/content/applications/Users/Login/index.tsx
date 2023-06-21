@@ -12,39 +12,47 @@ import {
 
 import { Helmet } from 'react-helmet-async';
 import LockIcon from '@mui/icons-material/Lock';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { UserForLogin } from 'src/models/UserForLogin';
+import { ACCESS_TOKEN } from 'src/constants/constants';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
+import { UserContext } from 'src/contexts/UserContext';
 
 function LoginComponent() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const navigate = useNavigate();
+  const { userModifier } = useContext(UserContext);
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage('');
 
-    if (!username || !password) {
-      setErrorMessage('Please enter both username and password');
-      return;
-    }
     const user: UserForLogin = {
       username: username,
       password: password
     };
 
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/user/login`, user)
-      .then((response) => {
-        const token = response.data.token;
-        localStorage.setItem('token', token);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error('Login failed:', error);
-        setErrorMessage('Login failed. Please try again.');
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/user/login`,
+        user
+      );
+      const token = response.headers['jwt-token'];
+      console.log('Token:', token);
+      localStorage.setItem(ACCESS_TOKEN, token);
+      userModifier({ ...response.data });
+      toast.success('User logged successfully', {
+        position: toast.POSITION.TOP_CENTER
       });
+      navigate(`/user/details`);
+    } catch (error) {
+      console.error('Login failed:', error);
+      setErrorMessage('Wrong username or password. Please try again.');
+    }
   };
 
   return (
@@ -91,13 +99,10 @@ function LoginComponent() {
                         required
                         id="username"
                         label="Required"
-                        sx={{ minWidth: 400 }}
+                        sx={{ width: '100%' }}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                       />
-                      {errorMessage && (
-                        <span style={{ color: 'red' }}>{errorMessage}</span>
-                      )}
                     </Box>
                     <Box p={1}>
                       <Typography variant="h4" sx={{ pb: 2 }}>
@@ -108,7 +113,7 @@ function LoginComponent() {
                         id="password"
                         label="Required"
                         type="password"
-                        sx={{ minWidth: 400 }}
+                        sx={{ width: '100%', mb: 3 }}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />

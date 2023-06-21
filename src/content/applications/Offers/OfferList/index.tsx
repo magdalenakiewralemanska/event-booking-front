@@ -14,20 +14,10 @@ const Offers = () => {
       <Helmet>
         <title>Event offers</title>
       </Helmet>
-      <PageTitleWrapper />
-      <Container maxWidth="lg">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={3}
-        >
-          <Grid item xs={12}>
-            <OffersList eventId={parsedEventId} offers={[]} />
-          </Grid>
-        </Grid>
-      </Container>
+      <Grid item xs={12} m={5}>
+        <OffersList eventId={parsedEventId} offers={[]} />
+      </Grid>
+
       <Footer />
     </>
   );

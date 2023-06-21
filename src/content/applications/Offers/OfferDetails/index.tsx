@@ -18,14 +18,12 @@ function OfferDetails() {
   const fetchOfferDetails = async () => {
     try {
       const offerResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/events/${eventId}/offers/${offerId}`
+        `/events/${eventId}/offers/${offerId}`
       );
       const offerData = offerResponse.data;
       setSelectedOffer(offerData);
 
-      const offerPackageResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/offers/${offerId}`
-      );
+      const offerPackageResponse = await axios.get(`/offers/${offerId}`);
       const offerPackagesData = offerPackageResponse.data;
       setOfferPackages(offerPackagesData);
     } catch (error) {

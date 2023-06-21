@@ -19,6 +19,7 @@ import axios from 'axios';
 import { User } from 'src/models/User';
 import AddEventModal from './AddEventModal';
 import UpdateEventModal from './UpdateEventModal';
+import { authorizedApi } from 'src/interceptor/AxiosInterceptor';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -124,9 +125,7 @@ function Events() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/events`
-      );
+      const response = await axios.get(`/events`);
       console.log(response.data);
       setEvents(response.data);
       console.log(events);
