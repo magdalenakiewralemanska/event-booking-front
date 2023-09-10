@@ -4,6 +4,7 @@ import { Container, Grid } from '@mui/material';
 import Footer from 'src/components/Footer';
 import Events from './Events';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
+import { useState } from 'react';
 
 function EventBooking() {
   return (

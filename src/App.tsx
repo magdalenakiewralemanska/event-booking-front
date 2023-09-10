@@ -15,15 +15,15 @@ function App() {
   const content = useRoutes(router);
 
   return (
-    <ThemeProvider>
-      <ToastContainer />
-      <UserContextProvider>
+    <UserContextProvider>
+      <ThemeProvider>
+        <ToastContainer />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <CssBaseline />
           {content}
         </LocalizationProvider>
-      </UserContextProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </UserContextProvider>
   );
 }
 export default withAxiosInterceptor(App);

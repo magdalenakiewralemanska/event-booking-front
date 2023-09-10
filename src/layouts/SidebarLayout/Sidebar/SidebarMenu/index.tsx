@@ -15,6 +15,7 @@ import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import FilterVintageTwoToneIcon from '@mui/icons-material/FilterVintageTwoTone';
 import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
+import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 
 const MenuWrapper = styled(Box)(
@@ -204,12 +205,24 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
+                  to="/user/myEvents"
+                  startIcon={<FavoriteTwoToneIcon />}
+                >
+                  My events
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
                   to="/user/details"
                   startIcon={<AccountCircleTwoToneIcon />}
                 >
                   User Profile
                 </Button>
               </ListItem>
+
               <ListItem component="div">
                 <Button
                   disableRipple

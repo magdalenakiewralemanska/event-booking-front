@@ -55,6 +55,17 @@ const Registration = Loader(
     () => import('src/content/applications/Users/registration/RegistrationForm')
   )
 );
+const OrderList = Loader(
+  lazy(() => import('src/content/applications/Orders/OrderList'))
+);
+
+const UserOrder = Loader(
+  lazy(() => import('src/content/applications/Orders/orderDetails'))
+);
+
+const Error500 = Loader(
+  lazy(() => import('src/content/applications/Status/Status500'))
+);
 
 const routes: RouteObject[] = [
   {
@@ -131,7 +142,7 @@ const routes: RouteObject[] = [
     element: <SidebarLayout />,
     children: [
       {
-        path: 'packageDetails/:packageId',
+        path: ':eventId/:offerId/packageDetails/:packageId',
         element: <Package />
       },
       {
@@ -170,6 +181,22 @@ const routes: RouteObject[] = [
         )
       },
       {
+        path: 'myEvents',
+        element: (
+          <ProtectedRoute>
+            <OrderList />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'myEvents/:orderId',
+        element: (
+          <ProtectedRoute>
+            <UserOrder />
+          </ProtectedRoute>
+        )
+      },
+      {
         path: 'settings',
         element: (
           <ProtectedRoute>
@@ -186,6 +213,21 @@ const routes: RouteObject[] = [
         element: <Login />
       }
     ]
+  },
+  {
+    path: '500',
+    element: <BaseLayout />,
+    children: [
+      {
+        path: '',
+        element: <Error500 />
+      }
+    ]
+  },
+  // Przekierowanie na trasę błędu 500 w przypadku wystąpienia błędu 500
+  {
+    path: '*',
+    element: <Navigate to="500" replace />
   }
 ];
 

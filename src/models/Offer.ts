@@ -1,4 +1,5 @@
 import {Address} from "./Address";
+import { DaySchedule } from "./DaySchedule";
 
 export interface Offer {
   id?: number;
@@ -11,4 +12,6 @@ export interface Offer {
   contactPhone: string;
   address: Address;
   eventId: number;
+  picturePath: string;
+  weekSchedule?: DaySchedule[];
 }

@@ -11,4 +11,8 @@ export interface User {
   password: string;
   role: RoleEnum;
   address: Address;
+  backgroundPicturePath?: string;
+  profilePicturePath?: string;
+  currentPassword?: string;
+  newPassword?: string;
   }

@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { User } from 'src/models/User';
 import { UserContextType } from 'src/models/UserContextType';
 
@@ -13,7 +13,15 @@ export const UserContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const userModifier = (user: User | null) => {
     setCurrentUser(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
   };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ currentUser, userModifier }}>

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 import { NavLink } from 'react-router-dom';
 
@@ -20,6 +20,8 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { UserLogout } from 'src/content/applications/Users/Login/Logout';
+import { UserContext } from 'src/contexts/UserContext';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -51,10 +53,7 @@ const UserBoxLabel = styled(Typography)(
 );
 
 function HeaderUserbox() {
-  const user = {
-    name: 'Magda',
-    avatar: '/static/images/user.jpg'
-  };
+  const { currentUser } = useContext(UserContext);
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -70,10 +69,16 @@ function HeaderUserbox() {
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar
+          variant="rounded"
+          alt={currentUser.username}
+          src={currentUser.profilePicturePath}
+        />
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="h4">Welcome {user.name}</UserBoxLabel>
+            <UserBoxLabel variant="h4">
+              Welcome {currentUser.username}
+            </UserBoxLabel>
           </UserBoxText>
         </Hidden>
         <Hidden smDown>
@@ -94,9 +99,13 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar
+            variant="rounded"
+            alt={currentUser.username}
+            src={currentUser.profilePicturePath}
+          />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{currentUser.username}</UserBoxLabel>
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
@@ -111,12 +120,7 @@ function HeaderUserbox() {
           </ListItemButton>
         </List>
         <Divider />
-        <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
-          </Button>
-        </Box>
+        <UserLogout />
       </Popover>
     </>
   );

@@ -6,58 +6,21 @@ import {
   Grid,
   Box,
   Typography,
-  CardMedia,
-  Button
+  CardMedia
 } from '@mui/material';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { OfferPackage } from 'src/models/OfferPackage';
-import { NavLink as RouterLink, useParams } from 'react-router-dom';
+import { Order } from 'src/models/Order';
 
-function PackageDetails({ packageId }) {
-  const { eventId, offerId } = useParams();
-  const [packageDetails, setPackageDetails] = useState<OfferPackage | null>(
-    null
-  );
+interface OrderPackageDetailsProps {
+  order: Order;
+}
 
-  useEffect(() => {
-    const fetchPackageDetails = async () => {
-      try {
-        const response = await axios.get<OfferPackage>(
-          `${process.env.REACT_APP_API_URL}/packageDetails/${packageId}`
-        );
-        const packageData = response.data;
-        setPackageDetails(packageData);
-      } catch (error) {
-        console.error('Error fetching package details:', error);
-      }
-    };
-
-    fetchPackageDetails();
-  }, [packageId]);
-
-  if (!packageDetails) {
-    return <div>Loading...</div>;
-  }
+function OrderPackageDetails(props: OrderPackageDetailsProps) {
+  const { order } = props;
 
   return (
     <Grid item xs={12} mt={3} p={3}>
       <Card>
-        <CardHeader
-          title="Package details"
-          action={
-            <Box display={'flex'} gap={3}>
-              <Button
-                variant="contained"
-                color="warning"
-                component={RouterLink}
-                to={`/events/${eventId}/offers/${offerId}`}
-              >
-                Back to the offer
-              </Button>
-            </Box>
-          }
-        />
+        <CardHeader title="Package details" />
         <Divider />
         <Grid
           container
@@ -71,13 +34,13 @@ function PackageDetails({ packageId }) {
             <Card>
               <Box pl={2} pr={2}>
                 <Typography variant="h3" fontWeight="bold" sx={{ py: 2 }}>
-                  {packageDetails.title}
+                  {order.offerPackage.title}
                 </Typography>
                 <Typography variant="h4" fontWeight="bold">
                   Description:
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ py: 2 }}>
-                  {packageDetails.description}
+                  {order.offerPackage.description}
                 </Typography>
               </Box>
 
@@ -104,22 +67,30 @@ function PackageDetails({ packageId }) {
                 </Box>
                 <Box pl={5} justifyContent={'right'}>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    {packageDetails.price}
+                    {order.offerPackage.price}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    {packageDetails.duration}
+                    {order.offerPackage.duration}
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    {packageDetails.maxAmountOfPeople}
+                    {order.offerPackage.maxAmountOfPeople}
                   </Typography>
                   <Box>
-                    {packageDetails.isOwnFoodAvailable ? <Check /> : <Clear />}
+                    {order.offerPackage.isOwnFoodAvailable ? (
+                      <Check />
+                    ) : (
+                      <Clear />
+                    )}
                   </Box>
                   <Box sx={{ py: 1 }}>
-                    {packageDetails.isOwnDrinkAvailable ? <Check /> : <Clear />}
+                    {order.offerPackage.isOwnDrinkAvailable ? (
+                      <Check />
+                    ) : (
+                      <Clear />
+                    )}
                   </Box>
                   <Typography variant="h4" fontWeight="normal">
-                    {packageDetails.specials}
+                    {order.offerPackage.specials}
                   </Typography>
                 </Box>
               </Grid>
@@ -128,7 +99,7 @@ function PackageDetails({ packageId }) {
                   Other details:
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ py: 2 }}>
-                  {packageDetails.otherDetails}
+                  {order.offerPackage.otherDetails}
                 </Typography>
               </Box>
             </Card>
@@ -137,8 +108,8 @@ function PackageDetails({ packageId }) {
             <Card>
               <CardMedia
                 sx={{ minHeight: 480 }}
-                image={packageDetails.picturePath}
-                title="Update"
+                image={order.offerPackage.picturePath}
+                title="kid"
               />
             </Card>
           </Grid>
@@ -148,4 +119,4 @@ function PackageDetails({ packageId }) {
   );
 }
 
-export default PackageDetails;
+export default OrderPackageDetails;

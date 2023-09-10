@@ -13,13 +13,14 @@ import {
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { EventType } from '../../../models/EventType';
 import axios from 'axios';
 import { User } from 'src/models/User';
 import AddEventModal from './AddEventModal';
 import UpdateEventModal from './UpdateEventModal';
 import { authorizedApi } from 'src/interceptor/AxiosInterceptor';
+import { UserContext } from 'src/contexts/UserContext';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -74,6 +75,7 @@ const CardAddAction = styled(Card)(
         
         .MuiTouchRipple-root {
           opacity: .2;
+          
         }
         
         &:hover {
@@ -84,7 +86,8 @@ const CardAddAction = styled(Card)(
 
 function Events() {
   const [events, setEvents] = useState<EventType[]>([]);
-  const [user, setUser] = useState<User>();
+  const { currentUser } = useContext(UserContext);
+  const isLoggedIn = !!currentUser;
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
@@ -156,7 +159,7 @@ function Events() {
             >
               <CardContent>
                 <AvatarWrapper>
-                  <img alt={event.name} src="/static/images/birthday.jpg" />
+                  <img alt={event.name} src={event.picturePath} />
                 </AvatarWrapper>
                 <Box
                   sx={{
@@ -183,61 +186,69 @@ function Events() {
                       Show Offers
                     </Button>
                   </Grid>
-                  <Grid sm item>
-                    <Box
-                      sx={{
-                        display: { xs: 'block', md: 'flex' },
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        onClick={() => handleClickUpdate(event)}
+                  {isLoggedIn && currentUser.role === 'ADMIN' && (
+                    <Grid sm item>
+                      <Box
+                        sx={{
+                          display: { xs: 'block', md: 'flex' },
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
                       >
-                        Update event
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleDeleteEvent(event)}
-                      >
-                        Delete event
-                      </Button>
-                    </Box>
-                  </Grid>
+                        <Button
+                          variant="contained"
+                          onClick={() => handleClickUpdate(event)}
+                        >
+                          Update event
+                        </Button>
+
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleDeleteEvent(event)}
+                        >
+                          Delete event
+                        </Button>
+                      </Box>
+                    </Grid>
+                  )}
                 </Grid>
               </CardContent>
             </Card>
           </Grid>
         ))}
-        <Grid xs={12} md={4} item>
-          <Tooltip arrow title="Click to add a new event">
-            <CardAddAction>
-              <CardActionArea
-                sx={{
-                  px: 1
-                }}
-              >
-                <CardContent>
-                  <AvatarAddWrapper>
-                    <AddTwoToneIcon fontSize="large" onClick={handleClickAdd} />
-                    <AddEventModal
-                      open={openAddModal}
-                      onClose={handleCloseAdd}
-                      fetchData={fetchData}
-                    />
-                    <UpdateEventModal
-                      open={openUpdateModal}
-                      onClose={handleCloseUpdate}
-                      selectedEvent={selectedEvent}
-                      fetchData={fetchData}
-                    />
-                  </AvatarAddWrapper>
-                </CardContent>
-              </CardActionArea>
-            </CardAddAction>
-          </Tooltip>
-        </Grid>
+        {isLoggedIn && currentUser.role === 'ADMIN' && (
+          <Grid xs={12} md={4} item>
+            <Tooltip arrow title="Click to add a new event">
+              <CardAddAction>
+                <CardActionArea
+                  sx={{
+                    px: 1
+                  }}
+                >
+                  <CardContent>
+                    <AvatarAddWrapper>
+                      <AddTwoToneIcon
+                        fontSize="large"
+                        onClick={handleClickAdd}
+                      />
+                      <AddEventModal
+                        open={openAddModal}
+                        onClose={handleCloseAdd}
+                        fetchData={fetchData}
+                      />
+                      <UpdateEventModal
+                        open={openUpdateModal}
+                        onClose={handleCloseUpdate}
+                        selectedEvent={selectedEvent}
+                        fetchData={fetchData}
+                      />
+                    </AvatarAddWrapper>
+                  </CardContent>
+                </CardActionArea>
+              </CardAddAction>
+            </Tooltip>
+          </Grid>
+        )}
       </Grid>
     </>
   );

@@ -3,7 +3,7 @@ export interface OfferPackage {
     id?: number;
     title: string;
     description: string;
-    price: number;
+    price: string;
     duration: number;
     maxAmountOfPeople: number;
     isOwnFoodAvailable: boolean;
@@ -11,4 +11,5 @@ export interface OfferPackage {
     specials: string;
     otherDetails: string,
     offerId: number;
+    picturePath: string;
 }

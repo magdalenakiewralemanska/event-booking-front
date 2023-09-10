@@ -8,79 +8,59 @@ import {
   Grid
 } from '@mui/material';
 import { NavLink as RouterLink } from 'react-router-dom';
+import { User } from 'src/models/User';
 
-function Addresses() {
-  const addresses = {
-    delivery: 12,
-    shipping: 8
-  };
+interface AddressProps {
+  user: User;
+}
 
+function Addresses({ user }: AddressProps) {
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="stretch"
-      spacing={3}
-    >
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardHeader
-            title="Delivery Addresses"
-            subheader={addresses.delivery + ' saved addresses'}
-          />
-          <Divider />
-          <Box p={2}>
-            <Typography variant="caption" fontWeight="bold">
-              Favourite
-            </Typography>
-            <Box sx={{ minHeight: { xs: 0, md: 122 } }} p={2}>
-              <Typography variant="h5">Kadin Westervelt</Typography>
-              <Typography variant="h5" sx={{ py: 1 }} fontWeight="normal">
-                714-650-6297
+      <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={3}
+      >
+        <Grid item xs={12} md={12}>
+          <Card>
+            <CardHeader
+                title="Your Address"
+                sx={{
+                  textAlign: 'center',
+                  backgroundColor: 'lightgray'
+                }}
+            />
+            <Divider />
+            <Box p={2} textAlign={'center'}>
+              <Typography variant="caption" fontWeight="bold">
+                {user.address.city}
               </Typography>
-              <Typography variant="subtitle1">
-                348 W. Goldfield Street Bethel Park, PA 15102
-              </Typography>
+              <Box p={2}>
+                <Typography variant="h5">
+                  {user.address.street} {user.address.houseNumber}/
+                  {user.address.apartmentNumber}
+                </Typography>
+                <Typography variant="h5" sx={{ py: 1 }} fontWeight="normal">
+                  {user.address.zipCode} {user.address.city}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </Card>
+          </Card>
+        </Grid>
+        <Box mt={4}>
+          <Button
+              size="medium"
+              variant="contained"
+              disableRipple
+              component={RouterLink}
+              to="/user/settings"
+          >
+            Update profile
+          </Button>
+        </Box>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardHeader
-            title="Shipping Addresses"
-            subheader={addresses.shipping + ' saved addresses'}
-          />
-          <Divider />
-          <Box p={2}>
-            <Typography variant="caption" fontWeight="bold">
-              Favourite
-            </Typography>
-            <Box sx={{ minHeight: { xs: 0, md: 122 } }} p={2}>
-              <Typography variant="h5">Kadin Westervelt</Typography>
-              <Typography variant="h5" sx={{ py: 1 }} fontWeight="normal">
-                714-650-6297
-              </Typography>
-              <Typography variant="subtitle1">
-                10 E. Wrangler Avenue Sioux Falls, SD 57103
-              </Typography>
-            </Box>
-          </Box>
-        </Card>
-      </Grid>
-      <Box mt={4}>
-        <Button
-          size="medium"
-          variant="contained"
-          disableRipple
-          component={RouterLink}
-          to="/user/settings"
-        >
-          Update profile
-        </Button>
-      </Box>
-    </Grid>
   );
 }
 

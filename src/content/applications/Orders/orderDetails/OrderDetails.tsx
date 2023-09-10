@@ -6,27 +6,25 @@ import {
   Box,
   Typography,
   CardMedia,
-  Button,
-  styled,
-  Avatar,
-  Input,
-  IconButton
+  Button
 } from '@mui/material';
-import { Offer } from 'src/models/Offer';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from 'src/contexts/UserContext';
-import { User } from 'src/models/User';
+import { Order } from 'src/models/Order';
 
-interface OfferDescriptionProps {
-  offer: Offer;
-  eventId: string;
-  currentUser: User;
-  isLoggedIn: boolean;
+interface OrderDetailsProps {
+  order: Order;
 }
 
-function OfferDescription(props: OfferDescriptionProps) {
-  const { eventId, offer, currentUser, isLoggedIn } = props;
+function OrderDetails(props: OrderDetailsProps) {
+  const { order } = props;
+
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
 
   return (
     <Grid item xs={12} mt={3}>
@@ -39,19 +37,10 @@ function OfferDescription(props: OfferDescriptionProps) {
                 variant="contained"
                 color="warning"
                 component={RouterLink}
-                to={`/events/${eventId}/offers`}
+                to={`/user/myEvents`}
               >
-                Back to the offer list
+                Back to the order list
               </Button>
-              {isLoggedIn && currentUser.role === 'ADMIN' && (
-                <Button
-                  variant="contained"
-                  component={RouterLink}
-                  to={`/${eventId}/${offer.id}/package`}
-                >
-                  Add new package for offer
-                </Button>
-              )}
             </Box>
           }
         />
@@ -68,13 +57,10 @@ function OfferDescription(props: OfferDescriptionProps) {
             <Card>
               <Box pl={2} pr={2}>
                 <Typography variant="h3" fontWeight="bold" sx={{ py: 2 }}>
-                  {offer.name}
-                </Typography>
-                <Typography variant="h4" fontWeight="bold">
-                  Why {offer.organizer}?
+                  {order.offer.name}
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ py: 2 }}>
-                  {offer.description}
+                  {order.offer.description}
                 </Typography>
               </Box>
 
@@ -88,7 +74,7 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Organizer:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    {offer.organizer}
+                    {order.offer.organizer}
                   </Typography>
                 </Box>
                 <Box pl={5} justifyContent={'left'} display={'flex'}>
@@ -100,7 +86,7 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Minimal age:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    {offer.minAge}
+                    {order.offer.minAge}
                   </Typography>
                 </Box>
                 <Box pl={5} justifyContent={'left'} display={'flex'}>
@@ -112,7 +98,7 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Maximal age:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    {offer.maxAge}
+                    {order.offer.maxAge}
                   </Typography>
                 </Box>
                 <Box pl={5} justifyContent={'left'} display={'flex'}>
@@ -124,7 +110,7 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Contact email:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    {offer.contactEmail}
+                    {order.offer.contactEmail}
                   </Typography>
                 </Box>
                 <Box pl={5} justifyContent={'left'} display={'flex'}>
@@ -136,7 +122,7 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Contact phone:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
-                    {offer.contactPhone}
+                    {order.offer.contactPhone}
                   </Typography>
                 </Box>
                 <Box pl={5} justifyContent={'left'} display={'flex'}>
@@ -148,8 +134,9 @@ function OfferDescription(props: OfferDescriptionProps) {
                     Place:
                   </Typography>
                   <Typography variant="h4" fontWeight="normal">
-                    {offer.address.street} {offer.address.houseNumber}/
-                    {offer.address.apartmentNumber}
+                    {order.offer.address.street}{' '}
+                    {order.offer.address.houseNumber}/
+                    {order.offer.address.apartmentNumber}
                   </Typography>
                 </Box>
                 <Box pl={5} justifyContent={'left'} display={'flex'}>
@@ -158,24 +145,61 @@ function OfferDescription(props: OfferDescriptionProps) {
                     fontWeight="normal"
                     sx={{ py: 1, minWidth: 200 }}
                   ></Typography>
+                  <Typography variant="h4" fontWeight="normal" sx={{ py: 1 }}>
+                    {order.offer.address.zipCode}
+                    {order.offer.address.city}
+                  </Typography>
+                </Box>
+                <Box pl={5} justifyContent={'left'} display={'flex'}>
                   <Typography
                     variant="h4"
                     fontWeight="normal"
-                    sx={{ py: 1, pb: 5 }}
+                    sx={{ py: 2, minWidth: 200 }}
                   >
-                    {offer.address.zipCode}
-                    {offer.address.city}
+                    Date:
+                  </Typography>
+                  <Typography variant="h4" fontWeight="normal" sx={{ py: 2 }}>
+                    {formatDate(new Date(order.date))}
                   </Typography>
                 </Box>
+                <Box pl={5} justifyContent={'left'} display={'flex'}>
+                  <Typography
+                    variant="h4"
+                    fontWeight="normal"
+                    sx={{ minWidth: 200 }}
+                  >
+                    Start hour:
+                  </Typography>
+                  <Typography variant="h4" fontWeight="normal">
+                    {order.startHour}
+                  </Typography>
+                </Box>
+                <Box pl={5} justifyContent={'left'} display={'flex'}>
+                  <Typography
+                    variant="h4"
+                    fontWeight="normal"
+                    sx={{ minWidth: 200, py: 2 }}
+                  >
+                    End hour:
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    fontWeight="normal"
+                    sx={{ py: 2, pb: 5 }}
+                  >
+                    {order.endHour}
+                  </Typography>
+                </Box>
+                <Box pl={5} justifyContent={'right'}></Box>
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardMedia
                 sx={{ minHeight: 480 }}
-                image={offer.picturePath}
-                title="Update"
+                image={order.offer.picturePath}
+                title="Balls"
               />
             </Card>
           </Grid>
@@ -185,4 +209,4 @@ function OfferDescription(props: OfferDescriptionProps) {
   );
 }
 
-export default OfferDescription;
+export default OrderDetails;

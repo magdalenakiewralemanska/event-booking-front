@@ -1,22 +1,34 @@
 import { Helmet } from 'react-helmet-async';
-import Footer from 'src/components/Footer';
-
 import { Grid, Container, Typography, Box } from '@mui/material';
-
+import Footer from 'src/components/Footer';
 import ProfileCover from './ProfileCover';
 import Addresses from './Addresses';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { useEffect, useState, useContext } from 'react';
-import { User } from 'src/models/User';
 import { UserContext } from 'src/contexts/UserContext';
+import axios from 'axios';
+import { authorizedApi } from 'src/interceptor/AxiosInterceptor';
 
 function ManagementUserProfile() {
   const { currentUser } = useContext(UserContext);
-  const [user, setUser] = useState<User>(currentUser);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `/user/details/${currentUser.username}`
+        );
+        const userData = response.data;
+        setUser(userData);
+        console.log(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     if (currentUser) {
-      setUser(currentUser);
+      fetchUserData();
     }
   }, [currentUser]);
 
@@ -43,10 +55,10 @@ function ManagementUserProfile() {
           spacing={3}
         >
           <Grid item xs={12} md={8}>
-            <ProfileCover user={user} />
+            {user && <ProfileCover user={user} />}
           </Grid>
           <Grid item xs={12} md={8}>
-            <Addresses />
+            {user && <Addresses user={user} />}
           </Grid>
         </Grid>
       </Container>
