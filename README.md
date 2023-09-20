@@ -32,7 +32,7 @@ In the future, it is also planned to create such functionalities as:
 5.	creating the ability to filter searched offers taking into account various search criteria,
 6.	expanding the user account by adding the ability to invite selected people to participate in a selected event.
 
-### Technologies
+# Technologies:
 ***
 <div align="center">
 	<code><img height="50" src="https://user-images.githubusercontent.com/25181517/192108891-d86b6220-e232-423a-bf5f-90903e6887c3.png" alt="Visual Studio Code" title="Visual Studio Code" /></code>
