@@ -8,6 +8,7 @@ The basic functions of the user-client include:
 4. Possibility to choose an offer package,
 5. Booking a date for a selected offer,
 6. Login, registration and user profile.
+   
 In the case of a user-organizer, the application allows primarily for:
 1. Adding and modifying existing offers,
 2. Adding packages for individual offers,
